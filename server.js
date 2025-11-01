@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 // Connect to MongoDB
-mongoose.connect("mongodb+srv://manypatel2002_db_user:0j21UlPlquTag54M@cluster0.nexlxvp.mongodb.net/?appName=Cluster0", {
+mongoose.connect("process.env.MONGO_URI", {
   useNewUrlParser: true,
   useUnifiedTopology: true
 
@@ -87,5 +87,9 @@ app.delete("/api/users/:id", async (req, res) => {
   }
 });
 
+// ✅ Root route (helps test deployment)
+app.get("/", (req, res) => {
+  res.send("✅ Backend is running on Render!");
+});
 // 🟢 Start Server
 app.listen(5000, () => console.log("🚀 Server running on port 5000"));
