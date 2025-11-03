@@ -6,10 +6,13 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 
 const app = express();
-app.use(cors({
-  origin: "*", // or your frontend URL on Render
-}));
-
+app.use(
+  cors({
+    origin: "https://dashboard-frontend-8bbm.onrender.com",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 // Connect to MongoDB
