@@ -6,7 +6,10 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: "*", // or your frontend URL on Render
+}));
+
 app.use(express.json());
 
 // Connect to MongoDB
@@ -27,17 +30,27 @@ const userSchema = new mongoose.Schema({
 });
 const User = mongoose.model("User", userSchema);
 
-// 🟢 Register
+// 🟢 Register Route
 app.post("/register", async (req, res) => {
   const { name, email, password } = req.body;
+
   try {
+    // ✅ Step 1: Check if user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.json({ success: false, message: "Email already registered" });
+    }
+
+    // ✅ Step 2: Create new user
     const user = new User({ name, email, password });
     await user.save();
+
     res.json({ success: true, message: "User created" });
   } catch (err) {
     res.json({ success: false, message: err.message });
   }
 });
+
 
 // 🟢 Login
 app.post("/login", async (req, res) => {
@@ -92,4 +105,5 @@ app.get("/", (req, res) => {
   res.send("✅ Backend is running on Render!");
 });
 // 🟢 Start Server
-app.listen(5000, () => console.log("🚀 Server running on port 5000"));
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
