@@ -8,7 +8,7 @@ const cors = require("cors");
 const app = express();
 app.use(
   cors({
-    origin: "https://dashboard-frontend-8bbm.onrender.com",
+    origin: ["https://dashboard-frontend-8bbm.onrender.com", "http://localhost:5173"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
@@ -16,7 +16,7 @@ app.use(
 app.use(express.json());
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI, {
+mongoose.connect(process.env.MONGO_URI, {     
   useNewUrlParser: true,
   useUnifiedTopology: true
 
@@ -26,7 +26,7 @@ mongoose.connect(process.env.MONGO_URI, {
 
 // User schema
 const userSchema = new mongoose.Schema({
-  name: String,
+  name: String,          
   email: { type: String, unique: true },
   password: String,
   role: { type: String, enum: ["user", "admin"], default: "user" }
@@ -54,6 +54,10 @@ app.post("/register", async (req, res) => {
   }
 });
 
+
+app.get("/test", async (req, res) => {
+  res.json("this is a test date");
+});
 
 // 🟢 Login
 app.post("/login", async (req, res) => {
